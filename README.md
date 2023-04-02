@@ -38,9 +38,9 @@ To use Oceania, simply run the `oceania` command in your terminal:
 
 When you run Oceania, it will display a list of all running Docker containers on your system along with their status:
 
-🟢 Green: container is running
-🔴 Red: container has exited
-🟡 Yellow: container is in a paused / degraded state
+- 🟢 Green: container is running
+- 🔴 Red: container has exited
+- 🟡 Yellow: container is in a paused / degraded state
 
 ## 🤝 Contributing
 If you have any suggestions for improving Oceania, feel free to submit a pull request. I'm always happy to receive contributions from y'all!
