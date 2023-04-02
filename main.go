@@ -13,14 +13,14 @@ func main() {
 	// Create a new docker client
 	cli, err := client.NewClientWithOpts(client.FromEnv)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error al crear el cliente de Docker: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error creating Docker client: %v\n", err)
 		os.Exit(1)
 	}
 
 	// Get all the currently running containers
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error al obtener la lista de contenedores: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error getting container list: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -35,5 +35,30 @@ func main() {
 		}
 
 		fmt.Printf("%s %s\n", container.ID[:12], state)
+
+
+		logs, err := cli.ContainerLogs(context.Background(), container.ID, types.ContainerLogsOptions{
+			ShowStdout: true,
+			ShowStderr: true,
+		})
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error getting container %s logs: %v\n", container.ID, err)
+			continue
+		}
+
+		_, err = fmt.Print("Logs del contenedor: ")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error printing logs of container %s: %v\n", container.ID, err)
+			continue
+		}
+
+		_, err = io.Copy(os.Stdout, logs)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error printing logs of container %s: %v\n", container.ID, err)
+			os.Exit(1)
+		}
+
+		fmt.Println()
 	}
 }
